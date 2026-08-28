@@ -1,0 +1,6 @@
+{
+  "name": "排班小日历",
+  "description": "简洁高效的排班日历工具，支持点击日期快速安排人员、农历与节气显示、人员排班统计与一键导出",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

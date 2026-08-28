@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Lora', Georgia, Cambria, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-canvas: #FDFDFB;
+  --color-surface: #FFFFFF;
+  --color-subtle: #F6F6F2;
+  --color-border-subtle: #E8E8E3;
+}
+
+body {
+  background-color: #FDFDFB;
+  color: #1C1C1A;
+  font-family: var(--font-sans);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media print {
+  body {
+    background-color: #ffffff;
+  }
+  header, footer, .no-print {
+    display: none !important;
+  }
+}
