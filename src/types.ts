@@ -50,6 +50,9 @@ export interface RosterSettings {
   showFestivals: boolean;
   showWeekendsHighlight: boolean;
   badgeStyle: 'filled' | 'outline' | 'compact';
+  cellSize: 'compact' | 'standard' | 'spacious';
+  calendarWidth: 'compact' | 'standard' | 'full';
+  theme?: 'light' | 'dark' | 'system';
   title: string;
 }
 

@@ -72,66 +72,66 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-[#E8E8E3] animate-in zoom-in-95">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-neutral-200/80 dark:border-neutral-800 animate-in zoom-in-95 transition-colors">
         {/* Header */}
-        <div className="px-6 py-4 bg-[#F6F6F2] border-b border-[#E8E8E3] flex items-center justify-between">
+        <div className="px-5 py-3.5 bg-neutral-100/80 dark:bg-neutral-800/80 border-b border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#1C1C1A] text-white flex items-center justify-center">
-              <Users className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center shadow-xs">
+              <Users className="w-3.5 h-3.5" />
             </div>
             <div>
-              <h3 className="text-base font-serif font-semibold text-neutral-900">常用排班人员管理</h3>
-              <p className="text-xs text-neutral-500">添加人员并分配专属识别颜色，便于日历上一目了然</p>
+              <h3 className="text-sm font-bold text-neutral-900 dark:text-white">常用排班人员管理</h3>
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">添加人员并分配专属识别颜色，便于日历上一目了然</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-neutral-400 hover:text-black p-1.5 rounded-lg hover:bg-[#E8E8E3] transition-colors"
+            className="text-neutral-400 hover:text-black dark:hover:text-white p-1.5 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-5">
+        <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
           {/* Add New Member Form */}
-          <form onSubmit={handleAdd} className="bg-[#FDFDFB] p-4 rounded-xl border border-[#E8E8E3] space-y-3">
-            <h4 className="text-xs font-semibold text-neutral-800">添加新人员</h4>
+          <form onSubmit={handleAdd} className="bg-neutral-50/70 dark:bg-neutral-850 p-3.5 rounded-xl border border-neutral-200/80 dark:border-neutral-800 space-y-2.5">
+            <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-200">添加新人员</h4>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="人员姓名 (如：廖、何、张三)"
-                className="flex-1 px-3 py-2 text-sm border border-[#E8E8E3] rounded-xl bg-white focus:outline-hidden focus:ring-1 focus:ring-black"
+                className="flex-1 px-3 py-1.5 text-xs sm:text-sm border border-neutral-200/80 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-hidden focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
               />
               <button
                 type="submit"
                 disabled={!newName.trim()}
-                className="px-4 py-2 bg-[#1C1C1A] hover:bg-black disabled:opacity-40 text-white text-sm font-medium rounded-xl shadow-xs transition-colors flex items-center gap-1 shrink-0"
+                className="px-3.5 py-1.5 bg-neutral-900 hover:bg-black dark:bg-white dark:hover:bg-neutral-100 disabled:opacity-40 text-white dark:text-neutral-900 text-xs font-semibold rounded-lg shadow-xs transition-all flex items-center gap-1 shrink-0 active:scale-95"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3.5 h-3.5" />
                 添加
               </button>
             </div>
 
             {/* Color picker palette */}
-            <div className="flex items-center gap-2 pt-1">
-              <span className="text-xs text-neutral-500 shrink-0">标签颜色:</span>
+            <div className="flex items-center gap-2 pt-0.5">
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 shrink-0">标签颜色:</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 {MEMBER_PALETTE.map((p) => (
                   <button
                     key={p.color}
                     type="button"
                     onClick={() => setSelectedColor(p.color)}
-                    className={`w-6 h-6 rounded-full transition-transform ${
-                      selectedColor === p.color ? 'scale-110 ring-2 ring-offset-1 ring-black' : 'hover:scale-105'
+                    className={`w-5 h-5 rounded-full transition-transform ${
+                      selectedColor === p.color ? 'scale-115 ring-2 ring-offset-1 ring-neutral-900 dark:ring-white' : 'hover:scale-105'
                     }`}
                     style={{ backgroundColor: p.color }}
                   />
@@ -142,11 +142,11 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
 
           {/* Member List */}
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 block mb-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block mb-1.5">
               现有人员 ({memberList.length})
             </label>
 
-            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+            <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
               {memberList.map((m) => {
                 const isEditing = editingId === m.id;
 
@@ -154,30 +154,30 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
                   return (
                     <div
                       key={m.id}
-                      className="p-3 bg-[#F6F6F2] border border-[#E8E8E3] rounded-xl space-y-2"
+                      className="p-2.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-xl space-y-2"
                     >
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
                           value={editName}
                           onChange={(e) => setEditName(e.target.value)}
-                          className="flex-1 px-2.5 py-1.5 text-sm bg-white border border-[#E8E8E3] rounded-lg focus:ring-1 focus:ring-black"
+                          className="flex-1 px-2.5 py-1 text-xs bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-md focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
                         />
                         <button
                           type="button"
                           onClick={() => saveEdit(m.id)}
-                          className="p-2 bg-[#1C1C1A] hover:bg-black text-white rounded-lg text-xs"
+                          className="p-1.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-xs shadow-xs"
                           title="保存"
                         >
-                          <Check className="w-4 h-4" />
+                          <Check className="w-3.5 h-3.5" />
                         </button>
                         <button
                           type="button"
                           onClick={() => setEditingId(null)}
-                          className="p-2 bg-[#E8E8E3] hover:bg-[#DEDEC8] text-neutral-700 rounded-lg text-xs"
+                          className="p-1.5 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-md text-xs"
                           title="取消"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-3.5 h-3.5" />
                         </button>
                       </div>
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -186,8 +186,8 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
                             key={p.color}
                             type="button"
                             onClick={() => setEditColor(p.color)}
-                            className={`w-5 h-5 rounded-full ${
-                              editColor === p.color ? 'ring-2 ring-offset-1 ring-black scale-110' : ''
+                            className={`w-4 h-4 rounded-full ${
+                              editColor === p.color ? 'ring-2 ring-offset-1 ring-neutral-900 dark:ring-white scale-110' : ''
                             }`}
                             style={{ backgroundColor: p.color }}
                           />
@@ -200,16 +200,16 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
                 return (
                   <div
                     key={m.id}
-                    className="flex items-center justify-between p-2.5 rounded-xl border border-[#E8E8E3] bg-white hover:bg-[#F9F9F7] transition-colors"
+                    className="flex items-center justify-between p-2 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-850 hover:bg-white dark:hover:bg-neutral-800 transition-colors"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
                       <span
-                        className="w-4 h-4 rounded-full shrink-0 shadow-2xs"
+                        className="w-3 h-3 rounded-full shrink-0 shadow-2xs"
                         style={{ backgroundColor: m.color }}
                       />
-                      <span className="font-medium text-neutral-900 text-sm">{m.name}</span>
+                      <span className="font-semibold text-neutral-900 dark:text-white text-xs sm:text-sm">{m.name}</span>
                       <span
-                        className="text-xs px-2 py-0.5 rounded text-white font-medium shadow-2xs"
+                        className="text-[11px] px-2 py-0.5 rounded-md text-white font-medium shadow-2xs"
                         style={{ backgroundColor: m.color }}
                       >
                         预览: {m.name}
@@ -220,18 +220,18 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
                       <button
                         type="button"
                         onClick={() => startEdit(m)}
-                        className="p-1.5 text-neutral-400 hover:text-black hover:bg-[#E8E8E3] rounded-lg transition-colors"
+                        className="p-1 text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md transition-colors"
                         title="编辑"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(m.id)}
-                        className="p-1.5 text-neutral-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-1 text-neutral-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-md transition-colors"
                         title="删除"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -242,11 +242,11 @@ export const MemberManagerModal: React.FC<MemberManagerModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 bg-[#F6F6F2] border-t border-[#E8E8E3] flex justify-end">
+        <div className="px-5 py-3 bg-neutral-100/80 dark:bg-neutral-800/80 border-t border-neutral-200/80 dark:border-neutral-800 flex justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 bg-[#1C1C1A] hover:bg-black text-white text-sm font-medium rounded-xl shadow-xs transition-colors"
+            className="px-4 py-1.5 bg-neutral-900 hover:bg-black dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95"
           >
             完成
           </button>

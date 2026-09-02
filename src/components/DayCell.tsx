@@ -8,6 +8,7 @@ interface DayCellProps {
   selectedFilterMember: string | null;
   showLunar: boolean;
   showWeekendsHighlight: boolean;
+  cellSize?: 'compact' | 'standard' | 'spacious';
   onCellClick: (day: CalendarDayInfo) => void;
   onRemoveShift: (shiftId: string, e: React.MouseEvent) => void;
   onQuickAdd: (day: CalendarDayInfo, e: React.MouseEvent) => void;
@@ -19,6 +20,7 @@ export const DayCell: React.FC<DayCellProps> = ({
   selectedFilterMember,
   showLunar,
   showWeekendsHighlight,
+  cellSize = 'compact',
   onCellClick,
   onRemoveShift,
   onQuickAdd,
@@ -30,46 +32,57 @@ export const DayCell: React.FC<DayCellProps> = ({
   // Check if first day of solar month
   const isFirstOfMonth = day.day === 1;
 
+  // Cell sizing styles based on density
+  const sizeClasses = {
+    compact: 'min-h-[46px] sm:min-h-[52px] p-1 sm:p-1.5',
+    standard: 'min-h-[58px] sm:min-h-[64px] p-1.5 sm:p-2',
+    spacious: 'min-h-[72px] sm:min-h-[80px] p-2 sm:p-2.5',
+  }[cellSize];
+
   return (
     <div
       id={`day-cell-${day.dateStr}`}
       onClick={() => onCellClick(day)}
-      className={`group relative min-h-[105px] sm:min-h-[120px] p-2 sm:p-2.5 border-b border-r border-[#E8E8E3] transition-colors cursor-pointer select-none flex flex-col justify-between ${
-        day.isCurrentMonth ? 'bg-white' : 'bg-[#F9F9F7] text-neutral-400'
+      className={`group relative ${sizeClasses} border-b border-r border-neutral-200/80 dark:border-neutral-800 transition-colors cursor-pointer select-none flex flex-col justify-between ${
+        day.isCurrentMonth
+          ? 'bg-white dark:bg-neutral-900/90 text-neutral-800 dark:text-neutral-200'
+          : 'bg-neutral-100/50 dark:bg-neutral-950/50 text-neutral-400 dark:text-neutral-600'
       } ${
-        showWeekendsHighlight && isWeekendDay && day.isCurrentMonth ? 'bg-[#FAFAF6]' : ''
+        showWeekendsHighlight && isWeekendDay && day.isCurrentMonth
+          ? 'bg-neutral-50/80 dark:bg-neutral-800/30'
+          : ''
       } ${
         hasFilter && !isFilteredIn ? 'opacity-25' : 'opacity-100'
       } ${
         activeBrushMember
-          ? 'hover:bg-[#F2F2EB]'
-          : 'hover:bg-[#F8F8F4]'
+          ? 'hover:bg-neutral-100 dark:hover:bg-neutral-800'
+          : 'hover:bg-neutral-50 dark:hover:bg-neutral-800/60'
       }`}
     >
       {/* Top row: Solar day number & Lunar / Solar term text */}
       <div className="flex items-start justify-between w-full">
         {/* Day Number / Month indicator */}
-        <div className="flex items-baseline gap-1">
+        <div className="flex items-baseline gap-0.5 sm:gap-1">
           {isFirstOfMonth && (
-            <span className={`text-[11px] sm:text-xs font-serif font-semibold ${day.isCurrentMonth ? 'text-neutral-900' : 'text-neutral-400'}`}>
+            <span className={`text-[10px] sm:text-[11px] font-bold ${day.isCurrentMonth ? 'text-neutral-900 dark:text-white' : 'text-neutral-400 dark:text-neutral-600'}`}>
               {day.month}月
             </span>
           )}
           {day.isToday ? (
             <span
               id={`today-badge-${day.dateStr}`}
-              className="inline-flex items-center justify-center w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#1C1C1A] text-white font-serif font-semibold text-xs sm:text-sm"
+              className="inline-flex items-center justify-center w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-bold text-[10px] sm:text-[11px] shadow-xs"
             >
               {day.day}
             </span>
           ) : (
             <span
-              className={`font-serif text-sm sm:text-base transition-colors ${
+              className={`text-xs sm:text-sm tabular-nums transition-colors ${
                 day.isCurrentMonth
                   ? isWeekendDay && showWeekendsHighlight
-                    ? 'text-neutral-900 font-semibold'
-                    : 'text-[#1C1C1A] group-hover:text-black font-normal'
-                  : 'text-neutral-400'
+                    ? 'text-neutral-900 dark:text-white font-bold'
+                    : 'text-neutral-800 dark:text-neutral-200 group-hover:text-black dark:group-hover:text-white font-semibold'
+                  : 'text-neutral-400 dark:text-neutral-600'
               }`}
             >
               {day.day}
@@ -79,16 +92,16 @@ export const DayCell: React.FC<DayCellProps> = ({
 
         {/* Lunar Date / Festival / Solar Term */}
         {showLunar && (
-          <div className="text-right">
+          <div className="text-right pl-1">
             <span
-              className={`text-[10px] sm:text-[11px] leading-tight block ${
+              className={`text-[9px] sm:text-[10px] leading-tight block truncate max-w-[58px] sm:max-w-[72px] ${
                 day.festival
-                  ? 'text-neutral-900 font-medium'
+                  ? 'text-neutral-900 dark:text-amber-400 font-semibold'
                   : day.solarTerm
-                  ? 'text-neutral-700 font-medium'
+                  ? 'text-neutral-700 dark:text-emerald-400 font-medium'
                   : day.isCurrentMonth
-                  ? 'text-neutral-400'
-                  : 'text-neutral-300'
+                  ? 'text-neutral-400 dark:text-neutral-500'
+                  : 'text-neutral-300 dark:text-neutral-700'
               }`}
               title={day.festival || day.solarTerm || day.lunarText}
             >
@@ -99,7 +112,7 @@ export const DayCell: React.FC<DayCellProps> = ({
       </div>
 
       {/* Shifts container: badges */}
-      <div className="mt-1.5 flex flex-col gap-1 flex-1 justify-start">
+      <div className="mt-1 flex flex-col gap-0.5 sm:gap-1 flex-1 justify-start">
         {day.shifts.map((shift: ShiftEntry) => {
           const shiftColor = shift.color || '#2563eb';
           const isHighlighted = selectedFilterMember === shift.memberName;
@@ -108,16 +121,16 @@ export const DayCell: React.FC<DayCellProps> = ({
             <div
               key={shift.id}
               id={`shift-badge-${shift.id}`}
-              className={`group/badge relative inline-flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium text-white shadow-2xs transition-all ${
-                isHighlighted ? 'ring-2 ring-offset-1 ring-[#1C1C1A] scale-[1.02]' : ''
+              className={`group/badge relative inline-flex items-center justify-between px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium text-white shadow-2xs transition-all leading-tight ${
+                isHighlighted ? 'ring-2 ring-offset-1 ring-neutral-900 dark:ring-white scale-[1.02]' : ''
               }`}
               style={{ backgroundColor: shiftColor }}
               title={`${shift.memberName}${shift.shiftLabel ? ` (${shift.shiftLabel})` : ''}${shift.note ? `: ${shift.note}` : ''}`}
             >
               <div className="flex items-center gap-1 truncate max-w-[85%]">
-                <span className="truncate">{shift.memberName}</span>
+                <span className="truncate font-medium">{shift.memberName}</span>
                 {shift.shiftLabel && (
-                  <span className="text-[10px] opacity-80 px-1 py-0.2 bg-black/20 rounded">
+                  <span className="text-[9px] opacity-90 px-0.5 py-0 bg-black/25 rounded">
                     {shift.shiftLabel}
                   </span>
                 )}
@@ -127,10 +140,10 @@ export const DayCell: React.FC<DayCellProps> = ({
               <button
                 type="button"
                 onClick={(e) => onRemoveShift(shift.id, e)}
-                className="opacity-0 group-hover/badge:opacity-100 hover:bg-black/30 rounded p-0.5 transition-opacity ml-1"
+                className="opacity-0 group-hover/badge:opacity-100 hover:bg-black/30 rounded p-0.5 transition-opacity ml-0.5"
                 title="删除该排班"
               >
-                <X className="w-3 h-3 text-white" />
+                <X className="w-2.5 h-2.5 text-white" />
               </button>
             </div>
           );
@@ -138,13 +151,13 @@ export const DayCell: React.FC<DayCellProps> = ({
 
         {/* Hover Quick Add indicator when no brush mode and hovering */}
         {!activeBrushMember && (
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity mt-auto pt-1 flex justify-end">
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity mt-auto pt-0.5 flex justify-end">
             <button
               type="button"
               onClick={(e) => onQuickAdd(day, e)}
-              className="inline-flex items-center gap-0.5 text-[11px] text-neutral-700 hover:text-black hover:bg-[#E8E8E3] rounded px-1.5 py-0.5 transition-colors"
+              className="inline-flex items-center gap-0.5 text-[10px] text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded px-1 py-0.5 transition-all shadow-2xs"
             >
-              <Plus className="w-3 h-3" />
+              <Plus className="w-2.5 h-2.5" />
               <span>加人</span>
             </button>
           </div>
@@ -153,9 +166,9 @@ export const DayCell: React.FC<DayCellProps> = ({
 
       {/* Active brush indicator visual overlay when hovering */}
       {activeBrushMember && (
-        <div className="absolute inset-0 bg-neutral-900/5 pointer-events-none opacity-0 group-hover:opacity-100 flex items-center justify-center">
+        <div className="absolute inset-0 bg-neutral-900/5 dark:bg-white/5 pointer-events-none opacity-0 group-hover:opacity-100 flex items-center justify-center">
           <span
-            className="px-2 py-0.5 text-xs text-white rounded font-medium shadow-xs"
+            className="px-1.5 py-0.5 text-[10px] sm:text-xs text-white rounded font-medium shadow-xs"
             style={{ backgroundColor: activeBrushMember.color }}
           >
             + {activeBrushMember.name}

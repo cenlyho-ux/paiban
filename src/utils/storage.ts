@@ -11,6 +11,9 @@ export const DEFAULT_SETTINGS: RosterSettings = {
   showFestivals: true,
   showWeekendsHighlight: true,
   badgeStyle: 'filled',
+  cellSize: 'compact',
+  calendarWidth: 'compact',
+  theme: 'light',
   title: '排班小日历',
 };
 

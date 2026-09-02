@@ -9,6 +9,7 @@ interface CalendarViewProps {
   selectedFilterMember: string | null;
   showLunar: boolean;
   showWeekendsHighlight: boolean;
+  cellSize?: 'compact' | 'standard' | 'spacious';
   onCellClick: (day: CalendarDayInfo) => void;
   onRemoveShift: (shiftId: string, e: React.MouseEvent) => void;
   onQuickAdd: (day: CalendarDayInfo, e: React.MouseEvent) => void;
@@ -21,6 +22,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   selectedFilterMember,
   showLunar,
   showWeekendsHighlight,
+  cellSize = 'compact',
   onCellClick,
   onRemoveShift,
   onQuickAdd,
@@ -32,9 +34,9 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
       : ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
   return (
-    <div className="bg-white rounded-xl border border-[#E8E8E3] overflow-hidden">
+    <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-sm overflow-hidden transition-colors">
       {/* Weekday header bar */}
-      <div className="grid grid-cols-7 border-b border-[#E8E8E3] bg-[#F6F6F2] text-center font-medium text-xs text-neutral-600">
+      <div className="grid grid-cols-7 border-b border-neutral-200/80 dark:border-neutral-800 bg-neutral-100/80 dark:bg-neutral-800/80 text-center font-semibold text-xs text-neutral-600 dark:text-neutral-400">
         {weekDays.map((wd, idx) => {
           const isWeekend =
             startDayOfWeek === 1
@@ -44,8 +46,10 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           return (
             <div
               key={wd}
-              className={`py-2.5 border-r border-[#E8E8E3] last:border-r-0 tracking-wider ${
-                isWeekend && showWeekendsHighlight ? 'text-neutral-900 bg-[#EFEFEA]' : ''
+              className={`py-1.5 border-r border-neutral-200/80 dark:border-neutral-800 last:border-r-0 tracking-wider text-[11px] sm:text-xs ${
+                isWeekend && showWeekendsHighlight
+                  ? 'text-neutral-900 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-700/40 font-bold'
+                  : ''
               }`}
             >
               {wd}
@@ -55,7 +59,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 border-l border-t border-[#E8E8E3]">
+      <div className="grid grid-cols-7 border-l border-t border-neutral-200/80 dark:border-neutral-800">
         {days.map((day) => (
           <DayCell
             key={day.dateStr}
@@ -64,6 +68,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             selectedFilterMember={selectedFilterMember}
             showLunar={showLunar}
             showWeekendsHighlight={showWeekendsHighlight}
+            cellSize={cellSize}
             onCellClick={onCellClick}
             onRemoveShift={onRemoveShift}
             onQuickAdd={onQuickAdd}

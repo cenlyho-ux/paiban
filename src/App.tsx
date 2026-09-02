@@ -56,6 +56,52 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isExportOpen, setIsExportOpen] = useState<boolean>(false);
 
+  // Sync theme with document.documentElement
+  const isDarkMode = useMemo(() => {
+    const theme = settings.theme || 'system';
+    if (theme === 'dark') return true;
+    if (theme === 'light') return false;
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  }, [settings.theme]);
+
+  const handleToggleTheme = () => {
+    const nextTheme: 'light' | 'dark' | 'system' = isDarkMode ? 'light' : 'dark';
+    updateSettings({ ...settings, theme: nextTheme });
+  };
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const theme = settings.theme || 'system';
+
+    const applyTheme = () => {
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else if (theme === 'light') {
+        root.classList.remove('dark');
+      } else {
+        // system
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
+      }
+    };
+
+    applyTheme();
+
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => applyTheme();
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, [settings.theme]);
+
   // Group shifts by date string for fast O(1) lookup
   const shiftMap = useMemo(() => {
     const map: Record<string, ShiftEntry[]> = {};
@@ -237,8 +283,14 @@ export default function App() {
     updateMembers(restoredMembers);
   };
 
+  const containerWidthClass = {
+    compact: 'max-w-4xl',
+    standard: 'max-w-5xl',
+    full: 'max-w-6xl',
+  }[settings.calendarWidth || 'compact'];
+
   return (
-    <div className="min-h-screen bg-[#FDFDFB] text-[#1C1C1A] flex flex-col font-sans selection:bg-neutral-200">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col font-sans selection:bg-neutral-200 dark:selection:bg-neutral-800 transition-colors duration-150">
       {/* Navigation & Header */}
       <Header
         currentYear={currentYear}
@@ -246,6 +298,9 @@ export default function App() {
         viewMode={viewMode}
         members={members}
         activeBrushMember={activeBrushMember}
+        calendarWidth={settings.calendarWidth || 'compact'}
+        isDarkMode={isDarkMode}
+        onToggleTheme={handleToggleTheme}
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
         onToday={handleToday}
@@ -262,7 +317,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 flex-1">
+      <main className={`${containerWidthClass} w-full mx-auto px-3 sm:px-6 py-3.5 flex-1 transition-all duration-200`}>
         {/* At-a-glance stats bar */}
         <StatsBar
           year={currentYear}
@@ -282,6 +337,7 @@ export default function App() {
             selectedFilterMember={selectedFilterMember}
             showLunar={settings.showLunar}
             showWeekendsHighlight={settings.showWeekendsHighlight}
+            cellSize={settings.cellSize || 'compact'}
             onCellClick={handleCellClick}
             onRemoveShift={handleRemoveShift}
             onQuickAdd={handleQuickAdd}
@@ -312,7 +368,7 @@ export default function App() {
       </main>
 
       {/* Footer Info */}
-      <footer className="py-6 text-center text-xs text-neutral-400 border-t border-[#E8E8E3] mt-auto">
+      <footer className="py-6 text-center text-xs text-neutral-400 dark:text-neutral-500 border-t border-neutral-200/80 dark:border-neutral-800 mt-auto transition-colors">
         <p className="tracking-wide">排班小日历 · 点击日期即时排班 · 支持农历节气与循环轮排</p>
       </footer>
 
